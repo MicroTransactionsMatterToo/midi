@@ -31,4 +31,6 @@ class IntBuilder:
     big_endian = None  # type: int
 
     def __init__(self, input_bytes: bytearray) -> None:
-        original_data = input_bytes
+        self.original_data = input_bytes
+        if (len(input_bytes) * 8) >= 32 and (len(input_bytes) * 8) < 64:
+            self.c_type = "uint32"

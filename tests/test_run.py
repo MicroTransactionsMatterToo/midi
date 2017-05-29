@@ -24,7 +24,6 @@ from unittest import TestCase
 
 
 class TestRun(TestCase):
-
     def test_run(self):
         assert True is True
         return
