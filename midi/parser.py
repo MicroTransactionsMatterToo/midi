@@ -26,7 +26,8 @@ __all__ = ["Parser"]
 
 
 class Parser:
-    midi_file = None  # type: Union[BufferedReader, TextIOWrapper]
-    current_position = None  # type: int
-    current_chunk = None  # type: int
-    chunk_positions = None  # type: Dict[int, int]
+    __slots__ = ["midi_file", "current_position", "current_chunk", "chunk_positions"]
+    midi_file: Union[BufferedReader, TextIOWrapper]
+    current_position: int
+    current_chunk: int
+    chunk_positions: Dict[int, int]
