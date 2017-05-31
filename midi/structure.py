@@ -21,7 +21,7 @@
 # SOFTWARE.
 from typing import AnyStr, List, Dict, Any, cast
 from io import BufferedReader
-from abc import ABC, abstractmethod
+from abc import ABCMeta, abstractmethod
 
 __all__ = ["Header", "Event"]
 
@@ -29,7 +29,7 @@ __all__ = ["Header", "Event"]
 class Header:
     __slots__ = ["length", "format", "ntrks", "division"]
 
-class Event(ABC):
+class Event(ABCMeta):
     __slots__ = ["event_name"]
 
     def __init__(self) -> None:
