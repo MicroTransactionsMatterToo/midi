@@ -27,7 +27,3 @@ __all__ = ["Parser"]
 
 class Parser:
     __slots__ = ["midi_file", "current_position", "current_chunk", "chunk_positions"]
-    midi_file: Union[BufferedReader, TextIOWrapper]
-    current_position: int
-    current_chunk: int
-    chunk_positions: Dict[int, int]

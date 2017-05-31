@@ -80,10 +80,6 @@ class Track:
 class VariableLengthValue:
     __slots__ = ['length', 'raw_data', 'value']
 
-    length: int
-    raw_data: bytearray
-    value: int
-
     def __init__(self, file_io: BufferedReader) -> None:
         # ---- Initialise values ---- #
         self.length = 0
