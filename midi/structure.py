@@ -84,7 +84,7 @@ class VariableLengthValue:
     raw_data: bytearray
     value: int
 
-    def __init__(self, file_io: BufferedReader):
+    def __init__(self, file_io: BufferedReader) -> None:
         # ---- Initialise values ---- #
         self.length = 0
         self.raw_data = bytearray()
