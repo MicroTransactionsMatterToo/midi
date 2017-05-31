@@ -29,7 +29,7 @@ __all__ = ["Header", "Event"]
 class Header:
     __slots__ = ["length", "format", "ntrks", "division"]
 
-class Event(ABCMeta):
+class Event(metaclass=ABCMeta):
     __slots__ = ["event_name"]
 
     def __init__(self) -> None:
