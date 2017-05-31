@@ -28,15 +28,9 @@ __all__ = ["Header", "Event"]
 
 class Header:
     __slots__ = ["length", "format", "ntrks", "division"]
-    length: int
-    format: int
-    ntrks: int
-    division: float
-
 
 class Event(ABC):
     __slots__ = ["event_name"]
-    event_name: str
 
     def __init__(self) -> None:
         pass
@@ -54,9 +48,6 @@ class Event(ABC):
 
 class Track:
     __slots__ = ["track_number", "length", "events"]
-    track_number: int
-    length: int
-    events: Dict[int, List[Event]]
 
 
 # class ValueSet:
