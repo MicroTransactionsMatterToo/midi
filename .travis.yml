@@ -8,7 +8,8 @@ install:
   - "pip install ."
   - "pip install nose2"
   - "pip install python-coveralls"
+  - "pip install cov-core"
 script:
-  "nose2"
+  "nose2 -C"
 after_success:
-  - "coveralls"
+  - "coveralls -d .coverage"
