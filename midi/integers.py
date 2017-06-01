@@ -19,9 +19,6 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-from typing import List, Dict
-
-
 class LengthException(Exception):
     pass
 
@@ -30,38 +27,42 @@ class IntBuilder:
     original_data = None  # type: bytearray
     c_type = None  # type: str
     byte_length = None  # type: int
-    little_endian = None  # type: int
-    big_endian = None  # type: int
+    little_endian = 0  # type: int
+    big_endian = 0  # type: int
 
     def __init__(self, input_bytes: bytearray) -> None:
         # Set byte_length
-        self.byte_length = len(input_bytes) * 8
+        self.byte_length = len(input_bytes)
         # Set the c_type field based on size of bytearray
         self.original_data = input_bytes
-        if 32 <= self.byte_length * 8 < 64:
+        if 32 < self.byte_length * 8 <= 64:
             self.c_type = "uint64"
-        elif 16 <= self.byte_length * 8 < 32:
+        elif 16 < self.byte_length * 8 <= 32:
             self.c_type = "uint32"
-        elif 8 <= self.byte_length * 8 < 16:
+        elif 8 < self.byte_length * 8 <= 16:
             self.c_type = "uint16"
-        elif 4 <= self.byte_length * 8 < 8:
+        elif 4 < self.byte_length * 8 <= 8:
             self.c_type = "uint8"
-        elif 2 <= self.byte_length * 8 < 4:
-            self.c_type = "short"
-        elif 1 <= self.byte_length * 8 < 2:
-            self.c_type = "char"
         elif self.byte_length == 0:
             raise LengthException("Can't build Int with bytearray of size 0")
         else:
             self.c_type = None
 
-        # Build the integer
-        for index, byte in enumerate(input_bytes):
-            # Calculate bit-shifting width
-            shift_be = ((self.byte_length - 1) - index) * 8  # type: int
-            shift_le = index * 8  # type: int
-            self.little_endian <<= shift_le
-            self.big_endian <<= shift_be
-            self.little_endian |= byte
-            self.big_endian |= byte
+        # Write ints
+        self.big_endian = int.from_bytes(input_bytes, "big")
+        self.little_endian = int.from_bytes(input_bytes, "little")
 
+    def __repr__(self) -> str:
+        return "<midi.integers.IntBuilder at 0x{id_hex:x}, raw: 0x{raw_val}, little endian: {little_endian}, " \
+               "big endian: " \
+               "{big_endian}, byte length: {byte_length}, C type: {c_type}>".format(
+            id_hex=id(self), raw_val=str(''.join([hex(x)[2:] for x in self.original_data])),
+            little_endian=self.little_endian,
+            big_endian=self.big_endian,
+            byte_length=self.byte_length,
+            c_type=self.c_type
+        )
+
+    def __str__(self) -> str:
+        return "{le}LE : {be}BE : 0x{raw}B".format(le=self.little_endian, be=self.big_endian,
+                                                   raw=str(''.join([hex(x)[2:] for x in self.original_data])))

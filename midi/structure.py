@@ -29,7 +29,8 @@ __all__ = ["Header", "Event"]
 class Header:
     __slots__ = ["length", "format", "ntrks", "division"]
 
-class Event(metaclass=ABCMeta):
+
+class Event(metaclass=ABCMeta):  # pramga: no cover
     __slots__ = ["event_name"]
 
     def __init__(self) -> None:
