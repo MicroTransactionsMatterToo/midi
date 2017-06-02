@@ -26,6 +26,16 @@ class LengthException(Exception):
 
 
 class IntBuilder:
+    """
+    Builds and contains integer data from a variable length byte-encoded number
+    
+    Attributes:
+        original_data (bytearray): the original data to the class
+        c_type (str): C/C++ equivalent type
+        byte_length (int): number of bytes given
+        little_endian (int): little endian decoded number
+        big_endian (int): big endian decoded number
+    """
     original_data = None  # type: bytearray
     c_type = None  # type: str
     byte_length = None  # type: int
