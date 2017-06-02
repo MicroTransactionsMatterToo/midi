@@ -1,14 +1,14 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="midi",
+    name="midisnake",
     version="0.0.1",
     author="Ennis Massey",
     author_email="ennisbaradine@gmail.com",
     description="Standard MIDI file parser for Python",
 
     license="MIT",
-    keywords="midi file parser library",
+    keywords="midisnake file parser library",
     packages=find_packages(),
     install_requires=[
         "typing"

@@ -21,20 +21,20 @@
 # SOFTWARE.
 from unittest import TestCase
 
-from midi.integers import IntBuilder, LengthException
+from midisnake.integers import IntBuilder, LengthException
 
 
 class TestIntBuilder(TestCase):
     def test_repr(self):
         self.intb_inst = IntBuilder(bytearray(b'\x01\xA4'))
         memory_address = id(self.intb_inst)
-        self.assertEqual(repr(self.intb_inst), "<midi.integers.IntBuilder at 0x{mem_addr:x}, raw: 0x1a4, "
+        self.assertEqual(repr(self.intb_inst), "<midisnake.integers.IntBuilder at 0x{mem_addr:x}, raw: 0x1a4, "
                                                "little endian: "
                                                "41985, big endian: 420, byte length: 2, C type: uint16>".format(
             mem_addr=memory_address))
         self.intb_inst = IntBuilder(bytearray(b'\x2A'))
         memory_address = id(self.intb_inst)
-        self.assertEqual(repr(self.intb_inst), "<midi.integers.IntBuilder at 0x{mem_addr:x}, raw: 0x2a, "
+        self.assertEqual(repr(self.intb_inst), "<midisnake.integers.IntBuilder at 0x{mem_addr:x}, raw: 0x2a, "
                                                "little endian: "
                                                "42, big endian: 42, byte length: 1, C type: uint8>".format(
             mem_addr=memory_address))

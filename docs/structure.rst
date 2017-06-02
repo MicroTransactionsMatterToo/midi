@@ -1,4 +1,4 @@
-.. currentmodule:: midi.structure
+.. currentmodule:: midisnake.structure
 
 Structure
 *********
@@ -18,6 +18,6 @@ This documentation covers the internal representations of MIDI constructs, such 
     Despite not being part of the structure module, the `IntBuilder` is part of this
 
 
-.. currentmodule:: midi.integers
+.. currentmodule:: midisnake.integers
 
 .. autoclass:: IntBuilder

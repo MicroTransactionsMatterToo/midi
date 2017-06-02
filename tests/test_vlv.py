@@ -24,7 +24,7 @@ from unittest.mock import MagicMock, call
 from typing import Union
 from io import BufferedReader
 
-from midi.structure import VariableLengthValue
+from midisnake.structure import VariableLengthValue
 
 
 class TestVLV(TestCase):

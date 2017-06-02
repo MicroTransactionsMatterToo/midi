@@ -22,7 +22,7 @@
 
 from unittest import TestCase
 
-from midi.structure import Track
+from midisnake.structure import Track
 
 
 class TestTrack(TestCase):

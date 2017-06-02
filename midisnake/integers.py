@@ -65,7 +65,7 @@ class IntBuilder:
         self.little_endian = int.from_bytes(input_bytes, "little")
 
     def __repr__(self) -> str:
-        return "<midi.integers.IntBuilder at 0x{id_hex:x}, raw: 0x{raw_val}, little endian: {little_endian}, " \
+        return "<midisnake.integers.IntBuilder at 0x{id_hex:x}, raw: 0x{raw_val}, little endian: {little_endian}, " \
                "big endian: " \
                "{big_endian}, byte length: {byte_length}, C type: {c_type}>".format(
             id_hex=id(self), raw_val=str(''.join([hex(x)[2:] for x in self.original_data])),

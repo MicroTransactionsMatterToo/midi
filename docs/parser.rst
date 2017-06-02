@@ -1,4 +1,4 @@
-.. currentmodule:: midi.parser
+.. currentmodule:: midisnake.parser
 
 Parser
 ******

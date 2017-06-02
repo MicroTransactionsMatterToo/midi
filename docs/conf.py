@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# midi documentation build configuration file, created by
+# midisnake documentation build configuration file, created by
 # sphinx-quickstart on Fri Jun  2 12:22:56 2017.
 #
 # This file is execfile()d with the current directory set to its
@@ -55,7 +55,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'midi'
+project = 'midisnake'
 copyright = '2017, Ennis Massey'
 author = 'Ennis Massey'
 
@@ -136,7 +136,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'midi.tex', 'midi Documentation',
+    (master_doc, 'midisnake.tex', 'midisnake Documentation',
      'Ennis Massey', 'manual'),
 ]
 
@@ -146,7 +146,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'midi', 'midi Documentation',
+    (master_doc, 'midisnake', 'midisnake Documentation',
      [author], 1)
 ]
 
@@ -157,8 +157,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'midi', 'midi Documentation',
-     author, 'midi', 'One line description of project.',
+    (master_doc, 'midisnake', 'midisnake Documentation',
+     author, 'midisnake', 'One line description of project.',
      'Miscellaneous'),
 ]
 
