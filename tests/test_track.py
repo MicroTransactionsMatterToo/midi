@@ -28,6 +28,3 @@ from midi.structure import Track
 class TestTrack(TestCase):
     def setUp(self):
         self.track_inst = Track()
-
-    def test_slots(self):
-        self.assertEqual(self.track_inst.__slots__, ["track_number", "length", "events"])
