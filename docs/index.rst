@@ -11,6 +11,7 @@ Welcome to midi's documentation!
    :caption: Contents:
 
    parser
+   structure
 
 
 
