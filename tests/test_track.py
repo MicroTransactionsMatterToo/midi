@@ -20,10 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from unittest import TestCase, TestResult
-from unittest.mock import MagicMock, call
-from typing import cast, Union
-from io import BufferedReader
+from unittest import TestCase
 
 from midi.structure import Track
 

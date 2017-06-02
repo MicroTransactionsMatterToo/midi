@@ -19,9 +19,9 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-from unittest import TestCase, TestResult
+from unittest import TestCase
 from unittest.mock import MagicMock, call
-from typing import cast, Union
+from typing import Union
 from io import BufferedReader
 
 from midi.structure import VariableLengthValue

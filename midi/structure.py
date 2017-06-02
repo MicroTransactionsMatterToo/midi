@@ -27,11 +27,14 @@ __all__ = ["Header", "Event"]
 
 
 class Header:
-    __slots__ = ["length", "format", "ntrks", "division"]
+    length = None  # type: int
+    format = None  # type: int
+    ntrks  = None  # type: int
+    division = None  # type: float
 
 
 class Event(metaclass=ABCMeta):  # pramga: no cover
-    __slots__ = ["event_name"]
+    event_name = None  # type: str
 
     def __init__(self) -> None:
         pass
@@ -48,7 +51,10 @@ class Event(metaclass=ABCMeta):  # pramga: no cover
 
 
 class Track:
-    __slots__ = ["track_number", "length", "events"]
+    track_number = None  # type: int
+    length = None  # type: int
+    events = None  # type: List[Event]
+
 
 
 # class ValueSet:
@@ -70,9 +76,24 @@ class Track:
 
 
 class VariableLengthValue:
-    __slots__ = ['length', 'raw_data', 'value']
+    """Parses and stores a MIDI variable length value
+    
+    Attributes:
+        length (int): Length, in bytes, of value
+        raw_data (bytearray): raw data read from file
+        value (int): Final parsed value
+    """
+    length = None  # type: int
+    raw_data = None   # type: bytearray
+    value = None  # type: int
+
 
     def __init__(self, file_io: BufferedReader) -> None:
+        """
+        Parses a MIDI variable length value (VLV), and returns its length        
+        Args:
+            file_io (BufferedReader): Binary file object storing MIDI data 
+        """
         # ---- Initialise values ---- #
         self.length = 0
         self.raw_data = bytearray()
