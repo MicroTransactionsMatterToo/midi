@@ -27,13 +27,26 @@ __all__ = ["Header", "Event"]
 
 
 class Header:
+    """
+    Represents a MIDI file header
+    
+    Attributes:
+        length (int): length in bytes of the file, minus the length of the header
+        format (int): Type of MIDI file, can be one of 0, 1 or 2. 0 and 1 are single file MIDI songs, 2 is comprised 
+            of multiple files
+        ntrks (int): Number of :class:`Track` 's in the file
+        division (float): 
+    """
     length = None  # type: int
     format = None  # type: int
     ntrks  = None  # type: int
     division = None  # type: float
 
 
-class Event(metaclass=ABCMeta):  # pramga: no cover
+class Event(metaclass=ABCMeta):  # pramga: no
+    """
+    Metaclass representing a MIDI Event. Subclasses must implement the `process` function
+    """
     event_name = None  # type: str
 
     def __init__(self) -> None:
@@ -47,10 +60,24 @@ class Event(metaclass=ABCMeta):  # pramga: no cover
 
     @abstractmethod
     def process(self, data: int) -> None:
+        """
+        Processes the given data. Data is in the form of the remaining bytes in the file
+        
+        Args:
+            data (int): Data given to be processed. 
+        """
         pass
 
 
 class Track:
+    """
+    Represents a MIDI track
+    
+    Attributes:
+        track_number (int): Track index. Must be 0 or more
+        length (int): Length of the track in bytes
+        events (List[Event]): List of events present in the track
+    """
     track_number = None  # type: int
     length = None  # type: int
     events = None  # type: List[Event]
@@ -95,13 +122,13 @@ class VariableLengthValue:
             file_io (BufferedReader): Binary file object storing MIDI data 
         """
         # ---- Initialise values ---- #
-        self.length = 0
-        self.raw_data = bytearray()
-        self.value = 0
+        self.length = 0  # type: int
+        self.raw_data = bytearray()  # type: bytearray
+        self.value = 0  # type: int
 
         # ---- Parse value ---- #
         # Fetch one byte
-        self.value = file_io.read(1)[0]  # type: int
+        self.value = file_io.read(1)[0]
         self.raw_data.append(self.value)
         self.length += 1
         # If not 0, the value is more than one byte

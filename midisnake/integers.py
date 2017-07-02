@@ -19,6 +19,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+from sys import byteorder
 
 
 class LengthException(Exception):
@@ -68,13 +69,37 @@ class IntBuilder:
         return "<midisnake.integers.IntBuilder at 0x{id_hex:x}, raw: 0x{raw_val}, little endian: {little_endian}, " \
                "big endian: " \
                "{big_endian}, byte length: {byte_length}, C type: {c_type}>".format(
-            id_hex=id(self), raw_val=str(''.join([hex(x)[2:] for x in self.original_data])),
-            little_endian=self.little_endian,
-            big_endian=self.big_endian,
-            byte_length=self.byte_length,
-            c_type=self.c_type
+                id_hex=id(self), raw_val=str(''.join([hex(x)[2:] for x in self.original_data])),
+                little_endian=self.little_endian,
+                big_endian=self.big_endian,
+                byte_length=self.byte_length,
+                c_type=self.c_type
         )
 
     def __str__(self) -> str:
         return "{le}LE : {be}BE : 0x{raw}B".format(le=self.little_endian, be=self.big_endian,
                                                    raw=str(''.join([hex(x)[2:] for x in self.original_data])))
+
+    def __int__(self):
+        switch = {
+            "big": self.big_endian,
+            "little": self.little_endian
+        }
+        return switch[byteorder]
+
+    def __add__(self, other) -> [int, float]:
+        switch = {
+            "big": self.big_endian + other,
+            "little": self.little_endian + other
+        }
+        return switch[byteorder]
+
+    def __sub__(self, other) -> [int, float]:
+        switch = {
+            "big": self.big_endian - other,
+            "little": self.little_endian - other
+        }
+        return switch[byteorder]
+
+    def __abs__(self):
+        return abs(self.__int__())
