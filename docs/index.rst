@@ -10,6 +10,7 @@ Welcome to midi's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   events
    parser
    structure
 

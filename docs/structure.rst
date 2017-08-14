@@ -12,12 +12,3 @@ This documentation covers the internal representations of MIDI constructs, such 
 .. autoclass:: Track
 
 .. autoclass:: VariableLengthValue
-
-.. note::
-
-    Despite not being part of the structure module, the `IntBuilder` is part of this
-
-
-.. currentmodule:: midisnake.integers
-
-.. autoclass:: IntBuilder

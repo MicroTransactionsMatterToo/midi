@@ -26,6 +26,11 @@ from abc import ABCMeta, abstractmethod
 __all__ = ["Header", "Event"]
 
 
+class ParsedMIDI:
+    def __init__(self):
+        pass
+
+
 class Header:
     """
     Represents a MIDI file header
@@ -39,7 +44,7 @@ class Header:
     """
     length = None  # type: int
     format = None  # type: int
-    ntrks  = None  # type: int
+    ntrks = None  # type: int
     division = None  # type: float
 
 
@@ -48,9 +53,12 @@ class Event(metaclass=ABCMeta):  # pramga: no
     Metaclass representing a MIDI Event. Subclasses must implement the `process` function
     """
     event_name = None  # type: str
+    indicator_byte = None  # type: int
+    raw_data = None  # type: int
 
-    def __init__(self) -> None:
-        pass
+    def __init__(self, data: int) -> None:
+        self.raw_data = data
+        self._process(data)
 
     def __repr__(self) -> str:
         return "<MIDIEvent: {}>".format(self.event_name)
@@ -58,10 +66,24 @@ class Event(metaclass=ABCMeta):  # pramga: no
     def __str__(self) -> str:
         return "MIDIEvent: {}".format(self.event_name)
 
+
+    def valid(self, data: int) -> bool:
+        """
+        Used by the parser to determine if the event is applicable
+        Args:
+            data (int): bytes of event
+
+        Returns:
+            bool: Whether the event matches or not
+        """
+        return (self.indicator_byte == (bytearray.fromhex(hex(data)[2:])[0]))
+
     @abstractmethod
-    def process(self, data: int) -> None:
+    def _process(self, data: int) -> None:
         """
         Processes the given data. Data is in the form of the remaining bytes in the file
+
+        Called internally by __init__
         
         Args:
             data (int): Data given to be processed. 
@@ -84,24 +106,6 @@ class Track:
 
 
 
-# class ValueSet:
-#     integer: Dict[int, int]
-#     string: Dict[str, str]
-#     raw: Any
-#
-#     def __init__(self, data: Any) -> None:
-#         if type(data) is str:
-#             cast(str, data)
-#             # Set the String values
-#             self.string = {
-#                 "ASCII": data.encode("ascii"),
-#                 "UTF8": data.encode("utf-8"),
-#                 "SHIFT-JIS": data.encode("shift-jis")
-#             }
-#             self.integer = {}
-#             self.raw = data  # type: str
-
-
 class VariableLengthValue:
     """Parses and stores a MIDI variable length value
     
@@ -111,9 +115,8 @@ class VariableLengthValue:
         value (int): Final parsed value
     """
     length = None  # type: int
-    raw_data = None   # type: bytearray
+    raw_data = None  # type: bytearray
     value = None  # type: int
-
 
     def __init__(self, file_io: BufferedReader) -> None:
         """
