@@ -260,6 +260,14 @@ class PitchBend(Event):
     
     Notes:
         Subclasses the :class:`midisnake.structure.Event` metaclass
+    
+    Attributes:
+        event_name (str): Name of Event
+        indicator_byte (int): Byte that indicates the MIDI Event type
+        channel_number (int): MIDI Channel number
+        bend_amount (int): Amount of bend to apply
+        raw_data (int): Initial data from MIDI file
+        
         
 
     """
@@ -271,6 +279,7 @@ class PitchBend(Event):
     channel_number = None  # type: int
 
     raw_data = None  # type: int
+
     def _process(self, data: int):
         data_array = bytearray.fromhex(hex(data)[2:])
         self.channel_number = data_array[0] & 0x0F
