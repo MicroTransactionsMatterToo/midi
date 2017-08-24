@@ -267,9 +267,6 @@ class PitchBend(Event):
         channel_number (int): MIDI Channel number
         bend_amount (int): Amount of bend to apply
         raw_data (int): Initial data from MIDI file
-        
-        
-
     """
     event_name = "Pitch Bend"
     indicator_byte = 0xE0

@@ -72,7 +72,8 @@ class Event(metaclass=ABCMeta):  # pramga: no
         return "MIDIEvent: {}".format(self.event_name)
 
 
-    def valid(self, data: int) -> bool:
+    @classmethod
+    def valid(cls, data: int) -> bool:
         """
         Used by the parser to determine if the event is applicable
         Args:
@@ -81,7 +82,7 @@ class Event(metaclass=ABCMeta):  # pramga: no
         Returns:
             bool: Whether the event matches or not
         """
-        return (self.indicator_byte == (bytearray.fromhex(hex(data)[2:])[0]))
+        return (cls.indicator_byte == (bytearray.fromhex(hex(data)[2:])[0] & 0xF0))
 
     @abstractmethod
     def _process(self, data: int) -> None:
