@@ -50,7 +50,12 @@ class Header:
 
 class Event(metaclass=ABCMeta):  # pramga: no
     """
-    Metaclass representing a MIDI Event. Subclasses must implement the `process` function
+    Metaclass representing a MIDI Event. Subclasses must implement the :func:`~_process` function
+
+    Attributes:
+        event_name (str): Name of event
+        indicator_byte (int): Byte that indicates the MIDI Event type
+        raw_data (int): Initial data from MIDI file
     """
     event_name = None  # type: str
     indicator_byte = None  # type: int

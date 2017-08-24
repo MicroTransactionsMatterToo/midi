@@ -8,6 +8,8 @@ This documentation covers the internal representations of MIDI constructs, such 
 .. autoclass:: Header
 
 .. autoclass:: Event
+    :members:
+    :private-members:
 
 .. autoclass:: Track
 
