@@ -23,6 +23,8 @@ from typing import List
 from io import BufferedReader
 from abc import ABCMeta, abstractmethod
 
+from midisnake.errors import LengthError
+
 __all__ = ["Header", "Event"]
 
 
@@ -63,14 +65,22 @@ class Event(metaclass=ABCMeta):  # pramga: no
 
     def __init__(self, data: int) -> None:
         self.raw_data = data
-        self._process(data)
+        if len(hex(data)[2:]) != 6:
+            err_msg = "Length of given data is incorrect. The length is {} and it should be 6".format(
+                len(hex(data)[2:]))
+            raise LengthError(err_msg)
+        if self.valid(data):
+            self._process(data)
+        else:
+            err_msg = "{} given invalid data".format(type(self).__name__)
+            raise ValueError(err_msg)
+
 
     def __repr__(self) -> str:
         return "<MIDIEvent: {}>".format(self.event_name)
 
     def __str__(self) -> str:
         return "MIDIEvent: {}".format(self.event_name)
-
 
     @classmethod
     def valid(cls, data: int) -> bool:
@@ -109,7 +119,6 @@ class Track:
     track_number = None  # type: int
     length = None  # type: int
     events = None  # type: List[Event]
-
 
 
 class VariableLengthValue:
