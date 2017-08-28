@@ -50,7 +50,7 @@ class Header:
     division = None  # type: float
 
 
-class Event(metaclass=ABCMeta):
+class Event(metaclass=ABCMeta): # pragma: no
     """
     Metaclass representing a MIDI Event. Subclasses must implement the :func:`~_process` function
 
@@ -74,7 +74,6 @@ class Event(metaclass=ABCMeta):
         else:
             err_msg = "{} given invalid data".format(type(self).__name__)
             raise ValueError(err_msg)
-
 
     def __repr__(self) -> str:
         return "<MIDIEvent: {}>".format(self.event_name)

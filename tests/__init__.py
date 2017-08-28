@@ -1,6 +1,10 @@
+"""Sets up tests
+
+Configures the logger for use
+"""
 #                       MIT License
 # 
-# Copyright (c) 1/06/17 Ennis Massey
+# Copyright (c) 28/08/17 Ennis Massey
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -19,21 +23,33 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
-import nose2
 import logging
-from unittest import TestCase
+from os import mkdir
 
+try:
+    mkdir("./logs")
+except FileExistsError:
+    pass
 
-logger = logging.getLogger(__name__)
+fmt = logging.Formatter("[%(module)s] || %(asctime)s - %(levelname)s : %(module)s.%(funcName)s || %(message)s")
+ch = logging.StreamHandler()
 
-from midisnake.structure import Track
+ch.setLevel(logging.CRITICAL)
 
+fh = logging.FileHandler("logs/{}.log".format(__package__))
 
-class TestTrack(TestCase):
-    def setUp(self):
-        self.track_inst = Track()
+fh.setLevel(logging.INFO)
 
+logger = logging.getLogger(__package__)
+logger.setLevel(logging.INFO)
+logger.addHandler(ch)
+logger.addHandler(fh)
+logger.propagate = False
 
-if __name__ == "__main__":
-    nose2.main()
+ch.setFormatter(logging.Formatter("%(message)s"))
+fh.setFormatter(logging.Formatter("%(message)s"))
+
+logger.info("\033[1mTESTING STARTED\033[0m")
+
+fh.setFormatter(fmt)
+ch.setFormatter(fmt)

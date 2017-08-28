@@ -19,15 +19,21 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-from unittest import TestCase
+import nose2
+import logging
+from unittest import TestCase, TestSuite
 from unittest.mock import MagicMock, call
 
 from midisnake.events import NoteOff, NoteOn, PolyphonicAftertouch, PitchBend
 from midisnake.errors import LengthError
 
 
+logger = logging.getLogger(__name__)
+
+
 class TestNoteOn(TestCase):
     def test_validate(self):
+        logger.info("Starting NoteOn .valid function tests")
         test_val = NoteOn.valid(0x900000)
         self.assertTrue(test_val, "Generic MIDI NoteOn message failed validation. Value was 0x{:X}".format(test_val))
         test_val = NoteOn.valid(0x800000)
@@ -60,4 +66,12 @@ class TestNoteOn(TestCase):
                                ) as exc:
             NoteOn(0x1)
 
+        # Test validation exceptions
+        with self.assertRaises(ValueError,
+                               msg="NoteOn given invalid data did not raise ValueError. Value was 0x290011"
+                               ) as exc:
+            NoteOn(0x290011)
 
+
+if __name__ == "__main__":
+    nose2.main()
