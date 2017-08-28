@@ -39,7 +39,7 @@ fmt = logging.Formatter("[%(module)s] || %(asctime)s - %(levelname)s : %(module)
 
 class ExceptionFilter(logging.Filter):
     def filter(self, record: logging.LogRecord):
-        if record.msg.__repr__().__contains__("_AssertRaisesContext"):
+        if record.exc_info == (None, None, None):
             return False
         else:
             return True
