@@ -23,7 +23,10 @@ Configures the logger for use
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
 import logging
+import time
+from sys import version_info
 from os import mkdir
 
 try:
@@ -32,6 +35,16 @@ except FileExistsError:
     pass
 
 fmt = logging.Formatter("[%(module)s] || %(asctime)s - %(levelname)s : %(module)s.%(funcName)s || %(message)s")
+
+
+class ExceptionFilter(logging.Filter):
+    def filter(self, record: logging.LogRecord):
+        if record.msg.__repr__().__contains__("_AssertRaisesContext"):
+            return False
+        else:
+            return True
+
+
 ch = logging.StreamHandler()
 
 ch.setLevel(logging.CRITICAL)
@@ -49,7 +62,12 @@ logger.propagate = False
 ch.setFormatter(logging.Formatter("%(message)s"))
 fh.setFormatter(logging.Formatter("%(message)s"))
 
-logger.info("\033[1mTESTING STARTED\033[0m")
-
+logger.info(
+    "\033[1mTESTING STARTED -- Python Version: {pver.major}.{pver.minor}.{pver.micro} -- Time: {time}\033[0m".format(
+        pver = version_info,
+        time = time.asctime()
+    ))
 fh.setFormatter(fmt)
 ch.setFormatter(fmt)
+fh.addFilter(ExceptionFilter())
+ch.addFilter(ExceptionFilter())
