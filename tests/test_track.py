@@ -20,7 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import nose2
 import logging
 from unittest import TestCase
 
@@ -34,6 +33,3 @@ class TestTrack(TestCase):
     def setUp(self):
         self.track_inst = Track()
 
-
-if __name__ == "__main__":
-    nose2.main()

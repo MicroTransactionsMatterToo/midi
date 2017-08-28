@@ -19,7 +19,6 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-import nose2
 import logging
 from unittest import TestCase, TestSuite
 from unittest.mock import MagicMock, call
@@ -99,5 +98,3 @@ class TestNoteOn(TestCase):
             self.assertEqual(vars(obj), match_val, "When testing constructor of NoteOn with channel value: {}, "
                                              "parsing failed".format(channel >> 16))
 
-if __name__ == "__main__":
-    nose2.main()

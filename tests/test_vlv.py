@@ -19,7 +19,6 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-import nose2
 import logging
 from unittest import TestCase
 from unittest.mock import MagicMock, call
@@ -63,6 +62,3 @@ class TestVLV(TestCase):
         self.assertEqual(vlv_instance.length, 1, "VLV Incorrect length when reading single byte")
         self.mock_file.read.assert_has_calls([call(1)], "VLV Incorrect calls when reading from single byte")
 
-
-if __name__ == "__main__":
-    nose2.main()
