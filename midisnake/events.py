@@ -43,7 +43,7 @@ def _decode_leftright(data: int) -> str:
         return "right"
     elif data < 64:
         return "left"
-    elif data == 127:
+    elif data == 64:
         return "center"
     else:
         raise ValueError("Balance value {} was outside of valid range of 0-127".format(data))
@@ -143,7 +143,16 @@ def get_note_name(data: int) -> str:
 
     Returns:
         str: Note name
+    
+    Raises:
+        ValueError: This is raised when the given value is smaller than 0, or larger than 127 (maximum value allowed 
+        in specification)
     """
+    # Raise ValueError if value is too large or too small
+    if data > 127:
+        raise ValueError("Note values cannot be larger than 127 (0x7F). Given value was {0} ({0:x})".format(data))
+    if data < 0:
+        raise ValueError("Note values cannot be smaller than 0 (0x00). Given value was {0} ({0:x})".format(data))
     if data in range(0, 12):
         return note_values[data]
     else:
