@@ -240,7 +240,7 @@ class PolyphonicAftertouch(Event):
     Attributes:
         event_name (str): Name of Event
         indicator_byte (int): Byte that indicates the MIDI Event type
-        pressure (int): Polyphonic Pressure, between 0 and 16383
+        pressure (int): Polyphonic Pressure, between 0 and 127
         channel_number (int): MIDI Channel number
         raw_data (int): Initial data from MIDI file
     """
