@@ -39,15 +39,16 @@ note_values = {
 
 
 def _decode_leftright(data: int) -> str:
+    if data > 127:
+        raise ValueError("Balance value {} was outside of valid range of 0-127".format(data))
+    if data < 0:
+        raise ValueError("Balance value {} was outside of valid range of 0-127".format(data))
     if data > 64:
         return "right"
     elif data < 64:
         return "left"
     elif data == 64:
         return "center"
-    else:
-        raise ValueError("Balance value {} was outside of valid range of 0-127".format(data))
-
 
 midi_controls = {
     0x00: {
@@ -289,5 +290,5 @@ class PitchBend(Event):
     def _process(self, data: int):
         data_array = bytearray.fromhex(hex(data)[2:])
         self.channel_number = data_array[0] & 0x0F
-        self.bend_amount = (data_array[2] << 7) & data_array[1]
+        self.bend_amount = (data_array[2] << 7) + data_array[1]
         self.raw_data = data

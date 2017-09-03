@@ -29,25 +29,36 @@ logger = logging.getLogger(__name__)
 
 
 class TestIntBuilder(TestCase):
+    def setUp(self):
+        logger.info("Starting IntBuilder tests")
+
     def test_repr(self):
+        logger.info("Starting __repr__ tests")
         self.intb_inst = IntBuilder(bytearray(b'\x01\xA4'))
         memory_address = id(self.intb_inst)
-        self.assertEqual(repr(self.intb_inst), "<midisnake.integers.IntBuilder at 0x{mem_addr:x}, raw: 0x1a4, "
-                                               "little endian: "
-                                               "41985, big endian: 420, byte length: 2, C type: uint16>".format(
-            mem_addr=memory_address))
+        self.assertEqual(repr(self.intb_inst),
+                         "<midisnake.integers.IntBuilder at 0x{mem_addr:x}, raw: 0x1a4, "
+                         "little endian: 41985, big endian: 420, byte length: 2, C type: uint16>".format(
+                             mem_addr=memory_address),
+                         msg="IntBuilder given data {:x} was not parsed correctly".format(0x01A4)
+                         )
         self.intb_inst = IntBuilder(bytearray(b'\x2A'))
         memory_address = id(self.intb_inst)
-        self.assertEqual(repr(self.intb_inst), "<midisnake.integers.IntBuilder at 0x{mem_addr:x}, raw: 0x2a, "
-                                               "little endian: "
-                                               "42, big endian: 42, byte length: 1, C type: uint8>".format(
-            mem_addr=memory_address))
+        self.assertEqual(repr(self.intb_inst),
+                         "<midisnake.integers.IntBuilder at 0x{mem_addr:x}, raw: 0x2a, little endian: "
+                         "42, big endian: 42, byte length: 1, C type: uint8>".format(mem_addr=memory_address),
+                         msg="IntBuilder given data {:x} was not parsed correctly".format(0x2A)
+                         )
+        logger.info("Finished __repr__ tests")
 
     def test_str(self):
+        logger.info("Starting __str__ tests")
         self.intb_inst = IntBuilder(bytearray(b'\x01\xA4'))
         memory_address = id(self.intb_inst)
-        self.assertEqual(str(self.intb_inst), "41985LE : 420BE : 0x1a4B".format(
-            mem_addr=memory_address))
+        self.assertEqual(str(self.intb_inst),
+                         "41985LE : 420BE : 0x1a4B".format(
+                             mem_addr=memory_address)
+                         )
         self.intb_inst = IntBuilder(bytearray(b'\x2A'))
         memory_address = id(self.intb_inst)
         self.assertEqual(str(self.intb_inst), "42LE : 42BE : 0x2aB".format(
@@ -129,5 +140,3 @@ class TestIntBuilder(TestCase):
             'original_data': bytearray(
                 b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\r\xe0\xb6\xb3\xa7c\xff\xff')
         })
-
-
