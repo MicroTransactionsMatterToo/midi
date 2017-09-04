@@ -50,7 +50,7 @@ class Header:
     division = None  # type: float
 
 
-class Event(metaclass=ABCMeta): # pragma: no
+class Event(metaclass=ABCMeta): # pragma: no cover
     """
     Metaclass representing a MIDI Event. Subclasses must implement the :func:`~_process` function
 

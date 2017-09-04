@@ -20,8 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 import unittest
+import sys
 import logging
 from unittest import TestCase
+from unittest.mock import patch
 
 from midisnake.integers import IntBuilder, LengthException
 
@@ -63,6 +65,312 @@ class TestIntBuilder(TestCase):
         memory_address = id(self.intb_inst)
         self.assertEqual(str(self.intb_inst), "42LE : 42BE : 0x2aB".format(
             mem_addr=memory_address))
+
+    def test_int(self):
+        logger.info("Starting __int__ tests")
+        with patch('sys.byteorder', 'little'):
+            self.assertEqual(sys.byteorder, 'little', 'Patch failed')
+            self.intb_inst = IntBuilder(bytearray(b'\x01\xa4'))
+            self.assertEqual(self.intb_inst.__int__(),
+                             41985,
+                             msg="IntBuilder __int__ return incorrect value with system byteorder set to little")
+            self.assertEqual(int(self.intb_inst),
+                             41985,
+                             msg="IntBuilder converted with int() return incorrect value with system byteorder set to "
+                                 "little")
+            self.intb_inst = IntBuilder(bytearray(b'\x2a'))
+            self.assertEqual(self.intb_inst.__int__(),
+                             42,
+                             msg="IntBuilder __int__ return incorrect value with system byteorder set to little")
+            self.assertEqual(int(self.intb_inst),
+                             42,
+                             msg="IntBuilder converted with int() return incorrect value with system byteorder set to "
+                                 "little")
+        with patch('sys.byteorder', 'big'):
+            self.assertEqual(sys.byteorder, 'big', 'Patch failed')
+            self.intb_inst = IntBuilder(bytearray(b'\x01\xa4'))
+
+            self.assertEqual(self.intb_inst.__int__(),
+                             420,
+                             msg="IntBuilder __int__ return incorrect value with system byteorder set to big")
+            self.assertEqual(int(self.intb_inst),
+                             420,
+                             msg="IntBuilder converted with int() return incorrect value with system byteorder set to "
+                                 "big")
+            self.intb_inst = IntBuilder(bytearray(b'\x2a'))
+            self.assertEqual(self.intb_inst.__int__(),
+                             42,
+                             msg="IntBuilder __int__ return incorrect value with system byteorder set to big")
+            self.assertEqual(int(self.intb_inst),
+                             42,
+                             msg="IntBuilder converted with int() return incorrect value with system byteorder set to "
+                                 "big")
+
+    def test_sub(self):
+        logger.info("Starting __sub__ tests")
+        with patch('sys.byteorder', 'little'):
+            self.assertEqual(sys.byteorder, 'little', 'Patch failed')
+            self.intb_inst = IntBuilder(bytearray(b'\x01\xa4'))
+            self.other_inst = IntBuilder(bytearray(b'\xFF'))
+            self.assertEqual(
+                self.intb_inst - self.intb_inst,
+                0,
+                "IntBuilder(41985) minus itself did not equal 0"
+            )
+            self.assertEqual(
+                self.intb_inst - self.other_inst,
+                41730,
+                "IntBuilder(41985) minus IntBuilder(255) (little endian mode) did not equal 41730"
+            )
+            self.assertEqual(
+                self.other_inst - self.intb_inst,
+                -41730,
+                "IntBuilder(255) minus IntBuilder(41985) (little endian mode) did not equal -41730"
+            )
+            self.assertEqual(
+                self.intb_inst - 41985,
+                0,
+                "IntBuilder(41985) minus 41985 (itself) did not equal 0"
+            )
+            self.assertEqual(
+                self.intb_inst - 255,
+                41730,
+                "IntBuilder(41985) minus Int(255) (little endian mode) did not equal 41730"
+            )
+            self.assertEqual(
+                self.other_inst - 41985,
+                -41730,
+                "IntBuilder(255) minus Int(41985) (little endian mode) did not equal -41730"
+            )
+            self.intb_inst = IntBuilder(bytearray(b'\x2a'))
+            self.assertEqual(
+                self.intb_inst - self.intb_inst,
+                0,
+                "IntBuilder(42) minus itself did not equal 0"
+            )
+            self.assertEqual(
+                self.intb_inst - self.other_inst,
+                -213,
+                "IntBuilder(42) minus IntBuilder(255) (little endian mode) did not equal -213"
+            )
+            self.assertEqual(
+                self.other_inst - self.intb_inst,
+                213,
+                "IntBuilder(255) minus IntBuilder(42) (little endian mode) did not equal 213"
+            )
+            self.assertEqual(
+                self.intb_inst - 42,
+                0,
+                "IntBuilder(42) minus 42 (itself) did not equal 0"
+            )
+            self.assertEqual(
+                self.intb_inst - 255,
+                -213,
+                "IntBuilder(42) minus Int(255) (little endian mode) did not equal -213"
+            )
+            self.assertEqual(
+                self.other_inst - 42,
+                213,
+                "IntBuilder(42) minus Int(41985) (little endian mode) did not equal 213"
+            )
+        with patch('sys.byteorder', 'big'):
+            self.assertEqual(sys.byteorder, 'big', 'Patch failed')
+            self.intb_inst = IntBuilder(bytearray(b'\x01\xa4'))
+            self.other_inst = IntBuilder(bytearray(b'\xFF'))
+            self.assertEqual(
+                self.intb_inst - self.intb_inst,
+                0,
+                "IntBuilder(420) minus itself did not equal 0"
+            )
+            self.assertEqual(
+                self.intb_inst - self.other_inst,
+                165,
+                "IntBuilder(420) minus IntBuilder(255) (big endian mode) did not equal 165"
+            )
+            self.assertEqual(
+                self.other_inst - self.intb_inst,
+                -165,
+                "IntBuilder(255) minus IntBuilder(420) (big endian mode) did not equal -165"
+            )
+            self.assertEqual(
+                self.intb_inst - 420,
+                0,
+                "IntBuilder(420) minus 420 (itself) did not equal 0"
+            )
+            self.assertEqual(
+                self.intb_inst - 255,
+                165,
+                "IntBuilder(420) minus Int(255) (big endian mode) did not equal 165"
+            )
+            self.assertEqual(
+                self.other_inst - 420,
+                -165,
+                "IntBuilder(255) minus Int(420) (big endian mode) did not equal -165"
+            )
+            self.intb_inst = IntBuilder(bytearray(b'\x2a'))
+            self.assertEqual(
+                self.intb_inst - self.intb_inst,
+                0,
+                "IntBuilder(42) minus itself did not equal 0"
+            )
+            self.assertEqual(
+                self.intb_inst - self.other_inst,
+                -213,
+                "IntBuilder(42) minus IntBuilder(255) (big endian mode) did not equal -213"
+            )
+            self.assertEqual(
+                self.other_inst - self.intb_inst,
+                213,
+                "IntBuilder(255) minus IntBuilder(42) (big endian mode) did not equal 213"
+            )
+            self.assertEqual(
+                self.intb_inst - 42,
+                0,
+                "IntBuilder(42) minus 42 (itself) did not equal 0"
+            )
+            self.assertEqual(
+                self.intb_inst - 255,
+                -213,
+                "IntBuilder(42) minus Int(255) (big endian mode) did not equal -213"
+            )
+            self.assertEqual(
+                self.other_inst - 42,
+                213,
+                "IntBuilder(42) minus Int(420) (big endian mode) did not equal 213"
+            )
+
+    def test_add(self):
+        logger.info("Starting __add__ tests")
+        with patch('sys.byteorder', 'little'):
+            self.assertEqual(sys.byteorder, 'little', 'Patch failed')
+            self.intb_inst = IntBuilder(bytearray(b'\x01\xa4'))
+            self.other_inst = IntBuilder(bytearray(b'\xFF'))
+            self.assertEqual(
+                self.intb_inst + self.intb_inst,
+                83970,
+                "IntBuilder(41985) plus itself did not equal 0"
+            )
+            self.assertEqual(
+                self.intb_inst + self.other_inst,
+                42240,
+                "IntBuilder(41985) plus IntBuilder(255) (little endian mode) did not equal 42240"
+            )
+            self.assertEqual(
+                self.other_inst + self.intb_inst,
+                42240,
+                "IntBuilder(255) plus IntBuilder(41985) (little endian mode) did not equal +42240"
+            )
+            self.assertEqual(
+                self.intb_inst + 41985,
+                83970,
+                "IntBuilder(41985) plus 41985 (itself) did not equal 0"
+            )
+            self.assertEqual(
+                self.intb_inst + 255,
+                42240,
+                "IntBuilder(41985) plus Int(255) (little endian mode) did not equal 42240"
+            )
+            self.assertEqual(
+                self.other_inst + 41985,
+                42240,
+                "IntBuilder(255) plus Int(41985) (little endian mode) did not equal +42240"
+            )
+            self.intb_inst = IntBuilder(bytearray(b'\x2a'))
+            self.assertEqual(
+                self.intb_inst + self.intb_inst,
+                84,
+                "IntBuilder(42) plus itself did not equal 0"
+            )
+            self.assertEqual(
+                self.intb_inst + self.other_inst,
+                297,
+                "IntBuilder(42) plus IntBuilder(255) (little endian mode) did not equal +213"
+            )
+            self.assertEqual(
+                self.other_inst + self.intb_inst,
+                297,
+                "IntBuilder(255) plus IntBuilder(42) (little endian mode) did not equal 213"
+            )
+            self.assertEqual(
+                self.intb_inst + 42,
+                84,
+                "IntBuilder(42) plus 42 (itself) did not equal 0"
+            )
+            self.assertEqual(
+                self.intb_inst + 255,
+                297,
+                "IntBuilder(42) plus Int(255) (little endian mode) did not equal +213"
+            )
+            self.assertEqual(
+                self.other_inst + 42,
+                297,
+                "IntBuilder(42) plus Int(41985) (little endian mode) did not equal 213"
+            )
+        with patch('sys.byteorder', 'big'):
+            self.assertEqual(sys.byteorder, 'big', 'Patch failed')
+            self.intb_inst = IntBuilder(bytearray(b'\x01\xa4'))
+            self.other_inst = IntBuilder(bytearray(b'\xFF'))
+            self.assertEqual(
+                self.intb_inst + self.intb_inst,
+                840,
+                "IntBuilder(420) plus itself did not equal 0"
+            )
+            self.assertEqual(
+                self.intb_inst + self.other_inst,
+                675,
+                "IntBuilder(420) plus IntBuilder(255) (big endian mode) did not equal 675"
+            )
+            self.assertEqual(
+                self.other_inst + self.intb_inst,
+                675,
+                "IntBuilder(255) plus IntBuilder(420) (big endian mode) did not equal +675"
+            )
+            self.assertEqual(
+                self.intb_inst + 420,
+                840,
+                "IntBuilder(420) plus 420 (itself) did not equal 0"
+            )
+            self.assertEqual(
+                self.intb_inst + 255,
+                675,
+                "IntBuilder(420) plus Int(255) (big endian mode) did not equal 675"
+            )
+            self.assertEqual(
+                self.other_inst + 420,
+                675,
+                "IntBuilder(255) plus Int(420) (big endian mode) did not equal +675"
+            )
+            self.intb_inst = IntBuilder(bytearray(b'\x2a'))
+            self.assertEqual(
+                self.intb_inst + self.intb_inst,
+                84,
+                "IntBuilder(42) plus itself did not equal 0"
+            )
+            self.assertEqual(
+                self.intb_inst + self.other_inst,
+                297,
+                "IntBuilder(42) plus IntBuilder(255) (big endian mode) did not equal +213"
+            )
+            self.assertEqual(
+                self.other_inst + self.intb_inst,
+                297,
+                "IntBuilder(255) plus IntBuilder(42) (big endian mode) did not equal 213"
+            )
+            self.assertEqual(
+                self.intb_inst + 42,
+                84,
+                "IntBuilder(42) plus 42 (itself) did not equal 0"
+            )
+            self.assertEqual(
+                self.intb_inst + 255,
+                297,
+                "IntBuilder(42) plus Int(255) (big endian mode) did not equal +213"
+            )
+            self.assertEqual(
+                self.other_inst + 42,
+                297,
+                "IntBuilder(42) plus Int(420) (big endian mode) did not equal 213"
+            )
 
     def test_nullbyte(self):
         with self.assertRaises(LengthException):

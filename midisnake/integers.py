@@ -19,14 +19,15 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-from sys import byteorder
+import sys
 
+from typing import SupportsInt, SupportsAbs
 
 class LengthException(Exception):
     pass
 
 
-class IntBuilder:
+class IntBuilder(SupportsInt, SupportsAbs):
     """
     Builds and contains integer data from a variable length byte-encoded number
     
@@ -85,21 +86,21 @@ class IntBuilder:
             "big": self.big_endian,
             "little": self.little_endian
         }
-        return switch[byteorder]
+        return switch[sys.byteorder]
 
-    def __add__(self, other) -> [int, float]:
+    def __add__(self, other: SupportsInt) -> [int, float]:
         switch = {
-            "big": self.big_endian + other,
-            "little": self.little_endian + other
+            "big": self.big_endian + int(other),
+            "little": self.little_endian + int(other)
         }
-        return switch[byteorder]
+        return switch[sys.byteorder]
 
-    def __sub__(self, other) -> [int, float]:
+    def __sub__(self, other: SupportsInt) -> [int, float]:
         switch = {
-            "big": self.big_endian - other,
-            "little": self.little_endian - other
+            "big": self.big_endian - int(other),
+            "little": self.little_endian - int(other)
         }
-        return switch[byteorder]
+        return switch[sys.byteorder]
 
-    def __abs__(self):
+    def __abs__(self):  # pragma: no cover
         return abs(self.__int__())
