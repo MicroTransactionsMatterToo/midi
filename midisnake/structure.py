@@ -19,9 +19,9 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-from typing import List
-from io import BufferedReader
 from abc import ABCMeta, abstractmethod
+from io import BufferedReader, FileIO
+from typing import List, Union, Dict
 
 from midisnake.errors import LengthError
 
@@ -29,7 +29,7 @@ __all__ = ["Header", "Event"]
 
 
 class ParsedMIDI:
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
 
@@ -42,15 +42,37 @@ class Header:
         format (int): Type of MIDI file, can be one of 0, 1 or 2. 0 and 1 are single file MIDI songs, 2 is comprised 
             of multiple files
         ntrks (int): Number of :class:`Track` 's in the file
-        division (float): 
+        tpqn (float): Ticks per quarter note
     """
     length = None  # type: int
     format = None  # type: int
     ntrks = None  # type: int
-    division = None  # type: float
+    tpqn = None  # type: float
+
+    def __init__(self, data: Union[FileIO, BufferedReader]) -> None:
+        chunk_type = data.read(4)
+        if chunk_type != b'MThd':
+            raise ValueError("File had invalid header chunk type")
+
+        header_length = int.from_bytes(data.read(4), 'big')
+        if header_length != 6:
+            raise ValueError("File has unsupported header length")
+        self.length = header_length
+
+        format = int.from_bytes(data.read(2), 'big')
+        if format not in [0, 1, 2]:
+            raise ValueError("File has unsupported format")
+        self.format = format
+
+        ntrks = int.from_bytes(data.read(2), 'big')
+        if ntrks > 0 and format == 0:
+            raise ValueError("Multiple tracks in single track format")
+        self.ntrks = ntrks
+
+        self.tpqn = int.from_bytes(data.read(2), 'big')
 
 
-class Event(metaclass=ABCMeta): # pragma: no cover
+class Event(metaclass=ABCMeta):  # pragma: no cover
     """
     Metaclass representing a MIDI Event. Subclasses must implement the :func:`~_process` function
 
@@ -118,6 +140,17 @@ class Track:
     track_number = None  # type: int
     length = None  # type: int
     events = None  # type: List[Event]
+    meta_data = None  # type: Dict[str, ]
+
+    def __init__(self, data: Union[FileIO, BufferedReader]) -> None:
+        chunk_name = data.read(4)
+        if chunk_name != b'MTrk':
+            raise ValueError("Track Chunk header invalid")
+
+        self.length = int.from_bytes(data.read(4), 'big')
+
+    def _parse(self, data: Union[FileIO, BufferedReader]):
+        delta_time = VariableLengthValue(data)
 
 
 class VariableLengthValue:
@@ -132,7 +165,7 @@ class VariableLengthValue:
     raw_data = None  # type: bytearray
     value = None  # type: int
 
-    def __init__(self, file_io: BufferedReader) -> None:
+    def __init__(self, file_io: Union[BufferedReader, FileIO]) -> None:
         """
         Parses a MIDI variable length value (VLV), and returns its length        
         Args:

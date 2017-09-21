@@ -19,11 +19,30 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-from io import BufferedReader, TextIOWrapper
-from typing import Union, Dict
+from io import BufferedReader, FileIO
+from typing import Union, Dict, List
+
+from midisnake.structure import Track, Header, VariableLengthValue
 
 __all__ = ["Parser"]
 
 
 class Parser:
-    __slots__ = ["midi_file", "current_position", "current_chunk", "chunk_positions"]
+    midi_file = None  # type: Union[BufferedReader, FileIO]
+
+    current_position = None  # type: int
+    current_chunk = None  # type: int
+    chunk_positions = []  # type: List[int]
+
+    header = None  # type: Header
+    tracks = []  # type: List[Track]
+
+    def __init__(self, midi_file: BufferedReader) -> None:
+        self.midi_file = midi_file
+
+        self.header = Header(self.midi_file)
+
+    def _read_track(self):
+        self.chunk_positions.append(self.midi_file.tell())
+
+        new_track = Track(self.midi_file)

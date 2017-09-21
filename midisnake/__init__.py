@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from midisnake.parser import *
-from midisnake.structure import *
+from midisnake.parser import Parser
+from midisnake.structure import Event
 
 __all__ = ["Parser", "Event"]

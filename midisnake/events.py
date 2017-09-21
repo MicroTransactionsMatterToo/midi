@@ -19,8 +19,12 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+from typing import Any, Dict
 
+from midisnake.meta_events import *
 from midisnake.structure import Event
+
+__all__ = ["NoteOn", "NoteOff", "PolyphonicAftertouch", "PitchBend", "events"]
 
 note_values = {
     0: "C",
@@ -49,6 +53,9 @@ def _decode_leftright(data: int) -> str:
         return "left"
     elif data == 64:
         return "center"
+    else:
+        raise ValueError("Unable to decode left-right value")
+
 
 midi_controls = {
     0x00: {
@@ -134,6 +141,11 @@ midi_controls = {
         "byteorder": "big"
     }
 }
+
+meta_events = {
+    0: sequence_number,
+    1: text_event
+}  # type: Dict[int, Callable[[Union[BufferedReader, FileIO]], Tuple[Any, Any, Any]]]
 
 
 def get_note_name(data: int) -> str:
@@ -292,3 +304,21 @@ class PitchBend(Event):
         self.channel_number = data_array[0] & 0x0F
         self.bend_amount = (data_array[2] << 7) + data_array[1]
         self.raw_data = data
+
+
+class MetaFactory:
+    pass
+
+
+event_info = data.read(16)  # type: bytes
+event_array = bytearray(event_info)
+self.variant_number = event_array[1]
+# Attempt to call matching entry in meta_events
+try:
+    meta_data = meta_events[self.variant_number](data)
+except KeyError:
+    raise ValueError("Invalid or unsupported MIDI meta event. Event code was {0:x}".format(self.variant_number))
+
+
+
+events = [NoteOn, NoteOff, PitchBend, PolyphonicAftertouch]
