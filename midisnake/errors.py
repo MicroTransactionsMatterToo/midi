@@ -20,6 +20,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-class LengthError(Exception):
+class EventLengthError(Exception):
     """Raised when data is the wrong length"""
     pass
+
+class EventNullLengthError(Exception):
+    """Raised when a length is zero when it should never be so"""
+
+class EventTextError(Exception):
+    """Raised when an event contains unparseable text"""

@@ -21,9 +21,9 @@
 # SOFTWARE.
 from abc import ABCMeta, abstractmethod
 from io import BufferedReader, FileIO
-from typing import List, Union, Dict
+from typing import List, Union, Dict, Any
 
-from midisnake.errors import LengthError
+from midisnake.errors import EventLengthError
 
 __all__ = ["Header", "Event"]
 
@@ -90,7 +90,7 @@ class Event(metaclass=ABCMeta):  # pragma: no cover
         if len(hex(data)[2:]) != 6:
             err_msg = "Length of given data is incorrect. The length is {} and it should be 6".format(
                 len(hex(data)[2:]))
-            raise LengthError(err_msg)
+            raise EventLengthError(err_msg)
         if self.valid(data):
             self._process(data)
         else:
@@ -140,7 +140,11 @@ class Track:
     track_number = None  # type: int
     length = None  # type: int
     events = None  # type: List[Event]
-    meta_data = None  # type: Dict[str, ]
+    meta_data = {
+        "seq_number": None,
+        "copyright": None,
+        "chunk_name": None
+    }  # type: Dict[str, Any]
 
     def __init__(self, data: Union[FileIO, BufferedReader]) -> None:
         chunk_name = data.read(4)
@@ -151,6 +155,7 @@ class Track:
 
     def _parse(self, data: Union[FileIO, BufferedReader]):
         delta_time = VariableLengthValue(data)
+
 
 
 class VariableLengthValue:

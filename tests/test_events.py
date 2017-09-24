@@ -24,7 +24,7 @@ from unittest import TestCase, TestSuite
 from unittest.mock import MagicMock, call
 
 from midisnake.events import NoteOff, NoteOn, PolyphonicAftertouch, PitchBend, get_note_name, _decode_leftright
-from midisnake.errors import LengthError
+from midisnake.errors import EventLengthError
 
 logger = logging.getLogger(__name__)
 
@@ -60,14 +60,14 @@ class TestNoteOn(TestCase):
         # --- Exception Testing --- #
         logger.info("Starting NoteOn constructor exception tests")
         # Test Length Exceptions
-        with self.assertRaises(LengthError,
+        with self.assertRaises(EventLengthError,
                                msg="NoteOn did not raise LengthError when given value 0x123001929391923919"
                                ) as exc:
             NoteOn(0x123001929391923919)
             logger.exception(exc)
             
 
-        with self.assertRaises(LengthError,
+        with self.assertRaises(EventLengthError,
                                msg="NoteOn did not raise LengthError when given value 0x1"
                                ) as exc:
             NoteOn(0x1)
@@ -176,13 +176,13 @@ class TestNoteOff(TestCase):
         # --- Exception Testing --- #
         logger.info("Starting NoteOn constructor exception tests")
         # Test Length Exceptions
-        with self.assertRaises(LengthError,
+        with self.assertRaises(EventLengthError,
                                msg="NoteOff did not raise LengthError when given value 0x123001929391923919"
                                ) as exc:
             NoteOff(0x123001929391923919)
             logger.exception(exc)
             
-        with self.assertRaises(LengthError,
+        with self.assertRaises(EventLengthError,
                                msg="NoteOff did not raise LengthError when given value 0x1"
                                ) as exc:
             NoteOff(0x1)
@@ -298,13 +298,13 @@ class TestPolyphonicAftertouch(TestCase):
         # --- Exception Testing --- #
         logger.info("Starting PolyphonicAftertouch constructor exception tests")
         # Test Length Exceptions
-        with self.assertRaises(LengthError,
+        with self.assertRaises(EventLengthError,
                                msg="PolyphonicAftertouch did not raise LengthError when given value 0x123001929391923919"
                                ) as exc:
             PolyphonicAftertouch(0x123001929391923919)
             logger.exception(exc)
             
-        with self.assertRaises(LengthError,
+        with self.assertRaises(EventLengthError,
                                msg="PolyphonicAftertouch did not raise LengthError when given value 0x1"
                                ) as exc:
             PolyphonicAftertouch(0x1)
@@ -419,13 +419,13 @@ class TestPitchBench(TestCase):
         # --- Exception Testing --- #
         logger.info("Starting PitchBend constructor exception tests")
         # Test Length Exceptions
-        with self.assertRaises(LengthError,
+        with self.assertRaises(EventLengthError,
                                msg="PitchBend did not raise LengthError when given value 0x123001929391923919"
                                ) as exc:
             PitchBend(0x123001929391923919)
             logger.exception(exc)
             
-        with self.assertRaises(LengthError,
+        with self.assertRaises(EventLengthError,
                                msg="PitchBend did not raise LengthError when given value 0x1"
                                ) as exc:
             PitchBend(0x1)

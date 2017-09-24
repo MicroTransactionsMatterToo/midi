@@ -307,17 +307,32 @@ class PitchBend(Event):
 
 
 class MetaFactory:
-    pass
+    def __new__(cls, midi_file: Union[FileIO, BufferedReader]) -> Union[MetaEventType, None]:
+        # If the event is a Sequencer Specific one, ignore it and consume the associated bytes
+        meta_variant_bytes = midi_file.read(1)
+        meta_variant = int.from_bytes(meta_variant_bytes, 'big')
+        if meta_variant == 0x7F:
+            length_of_event = VariableLengthValue(midi_file)
+            _ = midi_file.read(length_of_event)
+            return None
+
+        variant_function = meta_events[meta_variant].function
+        variant_output = variant_function(midi_file)
+        variant_obj_type = meta_events[meta_variant].object_type
+
+        return variant_obj_type.__new__(variant_obj_type, variant_output)
 
 
-event_info = data.read(16)  # type: bytes
-event_array = bytearray(event_info)
-self.variant_number = event_array[1]
-# Attempt to call matching entry in meta_events
-try:
-    meta_data = meta_events[self.variant_number](data)
-except KeyError:
-    raise ValueError("Invalid or unsupported MIDI meta event. Event code was {0:x}".format(self.variant_number))
+
+
+# event_info = data.read(16)  # type: bytes
+# event_array = bytearray(event_info)
+# self.variant_number = event_array[1]
+# # Attempt to call matching entry in meta_events
+# try:
+#     meta_data = meta_events[self.variant_number](data)
+# except KeyError:
+#     raise ValueError("Invalid or unsupported MIDI meta event. Event code was {0:x}".format(self.variant_number))
 
 
 

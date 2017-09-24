@@ -39,7 +39,6 @@ class Parser:
 
     def __init__(self, midi_file: BufferedReader) -> None:
         self.midi_file = midi_file
-
         self.header = Header(self.midi_file)
 
     def _read_track(self):
