@@ -39,7 +39,7 @@ Pygments==2.2.0
 pylint==1.6.5
 python-coveralls==2.9.1
 pytz==2017.2
-PyYAML==3.12
+PyYAML==5.4
 requests==2.17.3
 simplegeneric==0.8.1
 six==1.10.0
