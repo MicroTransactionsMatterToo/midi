@@ -34,7 +34,7 @@ pockets==0.5.1
 port-for==0.3.1
 prompt-toolkit==1.0.13
 ptyprocess==0.5.1
-py==1.4.33
+py==1.10.0
 Pygments==2.2.0
 pylint==1.6.5
 python-coveralls==2.9.1
